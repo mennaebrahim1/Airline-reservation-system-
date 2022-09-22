@@ -1,0 +1,487 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <stdlib.h>
+#include<iomanip>
+
+
+using namespace std;
+
+
+
+//structs
+struct timee {
+	int hours, min;
+};
+struct date {
+	int day, month, year;
+};
+struct flightInf {
+	// numVal -> NUMBER OF AVALIBLE SETATS
+	int flightNum = 0, numVal = 0;
+	date dA = { 0,0,0 }, dD = { 0,0,0 };
+	timee tA = { 0,0 }, tD = { 0,0 };
+	string cityA, cityD;
+	float price = 0;
+
+};
+struct passInfo {
+	long long id = 0 , phonenum = 0;
+	int   n = 0 ;
+	string name, address;
+	flightInf f2[10];
+};
+
+
+int  signup(passInfo usr[10])
+{
+	int u;
+	for (u = 0; u < 10; u++) {
+		if (usr[u].id == 0) {
+			cout << "Enter Your Name" << endl;
+			cin.get();
+			getline(cin, usr[u].name);
+			cout << "Enter Your ID" << endl;
+			cin >> usr[u].id;
+			cout << "Enter Your Phone Number" << endl;
+			cin >> usr[u].phonenum;
+			cout << "Enter Your Address" << endl;
+			cin.get();
+			getline(cin, usr[u].address);
+			break;
+		}
+	}
+	return u;
+}
+int login(passInfo usr[10])
+{
+	long long id;
+	int  u;
+	bool s = true, h = false;
+	do {
+		cout << "Enter your ID please" << endl;
+		cin >> id;
+		for (u = 0; u < 10; u++)
+		{
+			if (usr[u].id == id)
+			{
+				cout << "Welcome  " << usr[u].name << endl; s = false; break;
+			}
+		}
+		if (s) { cout << "Sorry can't find your account" << endl; }
+	} while (s);
+	return u;
+}
+
+void print(flightInf f[10])
+{
+	cout << "Flight Num" << setw(17) << "Departure City" << setw(7) << "D" << "/" << "M" << "/";
+	cout << "Y" << setw(5) << "H" << ":" << "Min" << setw(15) << "Arrival City" << setw(7);
+	cout << "D" << "/" << "M" << "/";
+	cout << "Y" << setw(6) << "H" << ":" << "Min" << setw(14) << "price" << setw(14) << "Ava.Seats" << endl;
+	cout << "________________________________________________________________________________________________________________" << endl;
+
+	for (int i = 0; i < 10; i++) {
+
+		if (f[i].flightNum == 0) { continue; }
+		else {
+
+
+
+			cout << f[i].flightNum << setw(19) << f[i].cityD << setw(10) << f[i].dD.day << "/" << f[i].dD.month << "/";
+			cout << f[i].dD.year << setw(5) << f[i].tD.hours << ":" << f[i].tD.min << setw(13) << f[i].cityA << setw(9);
+			cout << f[i].dA.day << "/" << f[i].dA.month << "/";
+			cout << f[i].dA.year << setw(5) << f[i].tA.hours << ":" << f[i].tA.min << setw(10);
+			cout << f[i].price << " EG" << setw(10) << f[i].numVal << endl;
+			cout << "________________________________________________________________________________________________________________" << endl;
+		}
+	}
+}
+
+void addad(flightInf f1[10]) {
+	bool s = true;
+	for (int i = 0; i < 10; i++)
+	{
+		if (f1[i].flightNum == 0)
+		{
+			cout << "Enter Flight Id " << endl;
+			cin >> f1[i].flightNum;
+			cout << "Enter departure city " << endl;
+			cin >> f1[i].cityD;
+			cout << "Enter day of departure " << endl;
+			cin >> f1[i].dD.day;
+			cout << "Enter month of departure " << endl;
+			cin >> f1[i].dD.month;
+			cout << "Enter year of departure " << endl;
+			cin >> f1[i].dD.year;
+			cout << "Enter hour of departure " << endl;
+			cin >> f1[i].tD.hours;
+			cout << "Enter minuties" << endl;
+			cin >> f1[i].tD.min;
+
+			cout << "Enter arrival city " << endl;
+			cin >> f1[i].cityA;
+			cout << "Enter day of arrival " << endl;
+			cin >> f1[i].dA.day;
+			cout << "Enter month of arrival " << endl;
+			cin >> f1[i].dA.month;
+			cout << "Enter year of arrival " << endl;
+			cin >> f1[i].dA.year;
+			cout << "Enter hour of arrival" << endl;
+			cin >> f1[i].tA.hours;
+			cout << "Enter minuties" << endl;
+			cin >> f1[i].tA.min;
+			cout << "Enter price of flight" << endl;
+			cin >> f1[i].price;
+			cout << "Available seats" << endl;
+			cin >> f1[i].numVal;
+			s = false;
+			break;
+
+		}
+
+	} if (s) { cout << "Flights are completed (you can't add any more -_-)" << endl << endl; }
+
+}
+
+void cancel(flightInf f1[10]) {
+	int flightn;
+	cout << "Enter the flight number you want to delete " << endl;
+	cin >> flightn;
+	for (int i = 0; i < 10; i++) {
+		if (f1[i].flightNum == flightn) {
+			f1[i].flightNum = 0;
+			cout << "Succecfly deleted" << endl;
+		}
+
+	}
+
+
+}
+
+
+//function to get data from a file
+void getdata(flightInf f1[10], ifstream& show)
+{
+
+
+
+	for (int i = 0; i < 10; i++) {
+
+
+
+		show >> f1[i].flightNum;
+		show.get();
+		getline(show, f1[i].cityD);
+		show >> f1[i].dD.day >> f1[i].dD.month;
+		show >> f1[i].dD.year >> f1[i].tD.hours >> f1[i].tD.min;
+		show.get();
+		getline(show, f1[i].cityA);
+		show >> f1[i].dA.day >> f1[i].dA.month;
+		show >> f1[i].dA.year >> f1[i].tA.hours >> f1[i].tA.min >> f1[i].price >> f1[i].numVal;
+	}
+}
+void getdatau(passInfo usr[10], ifstream& show)
+{
+	int u;
+
+	for (u = 0; u < 10; u++) {
+		show >> usr[u].id;
+		show.get();
+		getline(show, usr[u].name);
+		show >> usr[u].phonenum;
+		show.get();
+		getline(show, usr[u].address);
+		show >> usr[u].n;
+		for (int i = 0; i < (usr[u].n); i++) {
+
+
+
+			show >> usr[u].f2[i].flightNum;
+			show.get();
+			getline(show, usr[u].f2[i].cityD);
+			show >> usr[u].f2[i].dD.day >> usr[u].f2[i].dD.month;
+			show >> usr[u].f2[i].dD.year >> usr[u].f2[i].tD.hours >> usr[u].f2[i].tD.min;
+			show.get();
+			getline(show, usr[u].f2[i].cityA);
+			show >> usr[u].f2[i].dA.day >> usr[u].f2[i].dA.month;
+			show >> usr[u].f2[i].dA.year >> usr[u].f2[i].tA.hours >> usr[u].f2[i].tA.min >> usr[u].f2[i].price>>usr[u].f2[i].numVal;
+
+
+		}
+	}
+}
+
+
+//function to add a flight
+void addf(flightInf f1[10], passInfo usr[10], int u) {
+	print(f1);
+	srand(time(0));
+	int flightn, seat;
+
+	cout << "Enter the flight number you want to add " << endl;
+	cin >> flightn;
+	cout << "Enter Number of seats " << endl;
+	cin >> seat;
+	system("CLS");
+	for (int i = 0; i < 10; i++) {
+		if (f1[i].flightNum == flightn) {
+			for (int j = 0; j < 10; j++)
+			{
+				if (usr[u].f2[j].flightNum == 0) {
+					usr[u].f2[j].flightNum = f1[i].flightNum;
+					usr[u].f2[j].cityD = f1[i].cityD;
+					usr[u].f2[j].dD.day = f1[i].dD.day;
+					usr[u].f2[j].dD.month = f1[i].dD.month;
+					usr[u].f2[j].dD.year = f1[i].dD.year;
+					usr[u].f2[j].tD.hours = f1[i].tD.hours;
+					usr[u].f2[j].cityA = f1[i].cityA;
+					usr[u].f2[j].dA.day = f1[i].dA.day;
+					usr[u].f2[j].dA.month = f1[i].dA.month;
+					usr[u].f2[j].dA.year = f1[i].dA.year;
+					usr[u].f2[j].tA.hours = f1[i].tA.hours;
+					usr[u].f2[j].price = f1[i].price;
+					usr[u].f2[j].numVal = seat;
+					usr[u].n = (j + 1);
+
+					f1[i].numVal = f1[i].numVal - seat;
+					cout << endl << endl << endl << endl;
+					cout << setw(65) << "Your Ticket" << endl;
+					cout << setw(55) << "------------------------------------------------------------------------------------------------------------------------" << endl << endl << endl;
+					cout << "          " << "Ticket Number : " << rand() % 100 + 1 << endl << endl;
+					cout << "          " << "Passenger ID : " << usr[u].id << endl << endl;
+					cout << "          " << "Flight Number : " << flightn << endl << endl;
+					cout << "          " << "Number of seats : " << seat << endl << endl;
+					cout << "          " << "Price : " << usr[u].f2[j].price << " EG" << endl << endl;
+					cout << "          " << "Reseravtion Date : " << rand() % 30 + 1 << "/" << rand() % 12 + 1 << "/2021" << endl << endl << endl << endl;
+					break;
+				}
+			}
+			break;
+		}
+	}
+
+
+
+}
+
+
+void printu(passInfo usr[10], int u)
+{
+	cout << "Flight Num" << setw(17) << "Departure City" << setw(7) << "D" << "/" << "M" << "/";
+	cout << "Y" << setw(5) << "H" << ":" << "Min" << setw(15) << "Arrival City" << setw(7);
+	cout << "D" << "/" << "M" << "/";
+	cout << "Y" << setw(6) << "H" << ":" << "Min" << setw(10) << "price" << setw(17) << "Rese.Seats" << endl;
+	cout << "_________________________________________________________________________________________________________________" << endl;
+
+
+	for (int i = 0; i < 10; i++) {
+
+		if (usr[u].f2[i].flightNum == 0) { continue; }
+		else {
+
+
+
+			cout << usr[u].f2[i].flightNum << setw(19) << usr[u].f2[i].cityD << setw(10) << usr[u].f2[i].dD.day << "/" << usr[u].f2[i].dD.month << "/";
+			cout << usr[u].f2[i].dD.year << setw(5) << usr[u].f2[i].tD.hours << ":" << usr[u].f2[i].tD.min << setw(13) << usr[u].f2[i].cityA << setw(9);
+			cout << usr[u].f2[i].dA.day << "/" << usr[u].f2[i].dA.month << "/";
+			cout << usr[u].f2[i].dA.year << setw(5) << usr[u].f2[i].tA.hours << ":" << usr[u].f2[i].tA.min << setw(10) << usr[u].f2[i].price << " EG" << setw(10) << usr[u].f2[i].numVal << endl;
+			cout << "_________________________________________________________________________________________________________________" << endl;;
+
+
+		}
+	}
+}
+
+//function to delete a resrved flights
+void deletef(passInfo usr[10], int u, flightInf f1[10] ) {
+	printu(usr, u);
+	int flightn;
+	cout << "Enter the flight number you want to delete " << endl;
+	cin >> flightn;
+	for (int i = 0; i < 10; i++) {
+		if (usr[u].f2[i].flightNum == flightn) {
+			usr[u].f2[i].flightNum = 0;
+			f1[i].numVal = (f1[i].numVal +  usr[u].f2[i].numVal);
+			cout << "Succecfly deleted" << endl;
+			usr[u].n--;
+		}
+
+	}
+}
+
+
+
+
+
+int main() {
+	
+	flightInf f1[10];
+	passInfo usr[10];
+	int u;
+	ifstream sh;
+	sh.open("lll.txt", ios::in);
+	getdata(f1, sh);
+	ifstream p;
+	p.open("user.txt", ios::in);
+	getdatau(usr, p);
+	sh.close();
+	p.close();
+
+	string g, o, k;
+
+	do {
+		int z, y, v;
+		int d;
+		cout << "_____________________________" << endl;
+		cout << endl;
+		cout << "  " << "Airline Reservation System" << endl;
+		cout << "_____________________________" << endl;
+		cout << endl; cout << endl;
+
+		cout << "  " << "1.Admin" << endl;
+		cout << "  " << "2.User" << endl;
+		cin >> d;
+		system("CLS");
+		switch (d) {
+			do {
+		case 1:
+			cout << "***********************" << endl;
+			cout << "  " << "Main menu" << endl;
+			cout << "***********************" << endl;
+			cout << "1.Add  a flight" << endl;
+			cout << "2.show all flights" << endl;
+			cout << "3.Delete flights" << endl;
+
+			cin >> y;
+			system("CLS");
+			cout << endl << endl;
+
+			switch (y)
+			{
+			case 1: addad(f1); break;
+			case 2: print(f1); break;
+			case 3:cancel(f1); break;
+
+			default:cout << "Invalid option" << endl;
+				break;
+
+			} 
+
+			cout << " If you want to continue enter (Y/y) " << endl <<endl;
+			cin >> k;
+			system("CLS");
+			} while (k == "y" || k=="Y"); break;
+
+		case 2:
+
+			cout << "  " << "1.Login" << endl;
+			cout << "  " << "2.Sign up" << endl;
+			cin >> v;
+			system("CLS");
+			switch (v)
+			{
+			case 1:u = login(usr); break;
+			case 2: 
+				cout << "***********************" << endl;
+				cout << "  " << "Enter Your Information" << endl;
+				cout << "***********************" << endl << endl;
+				
+				u = signup(usr); break;
+			default:cout << "Invalid option" << endl;
+				break;
+			}
+
+			do {
+				cout << "***********************" << endl;
+				cout << "  " << "Main menu" << endl;
+				cout << "***********************" << endl;
+				cout << "1.Book a flight" << endl;
+				cout << "2.Show my resirved flights" << endl;
+				cout << "3.Delete a flight" << endl;
+				cin >> z;
+
+				system("CLS");
+				cout << endl << endl;
+				switch (z)
+				{
+				case 1: addf(f1, usr, u); break;
+				case 2: printu(usr, u); break;
+				case 3:deletef(usr, u,f1); break;
+
+				default:cout << "Invalid option" << endl;
+					break;
+				}
+				cout << " If you want to continue enter (Y/y) " << endl;
+				cin >> o;
+				system("CLS");
+			} while (o == "y"||o=="Y"); break;
+		default:cout << "Invalid option" << endl;
+		}
+
+		cout << "Do you want to restart program" << endl <<endl;
+		cout << "Please Enter (Y/y) if you want to continue" << endl;
+		cin >> g;
+		system("CLS");
+	} while (g == "y"||g=="Y");
+
+
+
+
+
+
+	ofstream t;
+	t.open("lll.txt", ios::out);
+	for (int i = 0; i < 10; i++) {
+		if (f1[i].flightNum == 0) { continue; }
+		else {
+			t << f1[i].flightNum << endl;
+			t << f1[i].cityD << endl;
+			t << f1[i].dD.day << endl << f1[i].dD.month << endl;
+			t << f1[i].dD.year << endl << f1[i].tD.hours << endl << f1[i].tD.min << endl;
+			t << f1[i].cityA << endl << f1[i].dA.day << endl << f1[i].dA.month << endl;
+			t << f1[i].dA.year << endl << f1[i].tA.hours << endl << f1[i].tA.min << endl << f1[i].price << endl << f1[i].numVal << endl;
+
+		}
+	}
+
+	t.close();
+
+
+
+
+	ofstream l;
+	l.open("user.txt", ios::out);
+
+	for (u = 0; u < 10; u++) {
+		if (usr[u].id == 0) { continue; }
+		else {
+			l << usr[u].id << endl;
+			l << usr[u].name << endl;
+			l << usr[u].phonenum << endl;
+			l << usr[u].address << endl;
+			l << usr[u].n << endl;
+
+			for (int i = 0; i < 10; i++) {
+
+				if (usr[u].f2[i].flightNum == 0) { continue; }
+				else {
+
+					l << usr[u].f2[i].flightNum << endl;
+
+					l << usr[u].f2[i].cityD << endl;
+					l << usr[u].f2[i].dD.day << endl << usr[u].f2[i].dD.month << endl;
+					l << usr[u].f2[i].dD.year << endl << usr[u].f2[i].tD.hours << endl << usr[u].f2[i].tD.min << endl;
+					l << usr[u].f2[i].cityA << endl;
+					l << usr[u].f2[i].dA.day << endl << usr[u].f2[i].dA.month << endl;
+					l << usr[u].f2[i].dA.year << endl << usr[u].f2[i].tA.hours << endl << usr[u].f2[i].tA.min <<endl << usr[u].f2[i].price <<endl <<usr[u].f2[i].numVal << endl;
+
+				}
+			}
+		}
+	}
+
+	l.close();
+
+	return 0;
+}
